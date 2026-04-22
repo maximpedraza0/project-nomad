@@ -71,8 +71,10 @@ export type WikipediaOption = {
   id: string
   name: string
   description: string
-  size_mb: number
-  url: string | null
+  // Optional: multi-language options carry sizes per language in size_mb_by_lang.
+  // Consumers should prefer size_mb_by_lang[selectedLang], fall back to size_mb.
+  size_mb?: number
+  url?: string | null
   // New fields for dynamic resolution
   zim_name?: string    // template e.g. "wikipedia_{lang}_all"
   zim_flavour?: string // "maxi" | "nopic" | "mini"

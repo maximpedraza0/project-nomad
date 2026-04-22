@@ -37,12 +37,21 @@ const WikipediaSelector: React.FC<WikipediaSelectorProps> = ({
   const isDownloading = currentSelection?.status === 'downloading'
   const isFailed = currentSelection?.status === 'failed'
 
-  // Resolve size for current language
+  // Resolve size for current language.
+  // Fallback chain (best-effort, never returns undefined):
+  //   1. size_mb_by_lang[selectedLang]  — exact match
+  //   2. size_mb                         — legacy single-size options ("none")
+  //   3. size_mb_by_lang["en"]           — English as proxy when selected lang
+  //                                        has no data (better than 0 because
+  //                                        it conveys magnitude to the user)
+  //   4. 0                               — defensive last resort
   const getSizeForLang = (option: WikipediaOption): number => {
-    if (option.size_mb_by_lang && selectedLanguage in option.size_mb_by_lang) {
-      return option.size_mb_by_lang[selectedLanguage]
-    }
-    return option.size_mb
+    return (
+      option.size_mb_by_lang?.[selectedLanguage] ??
+      option.size_mb ??
+      option.size_mb_by_lang?.['en'] ??
+      0
+    )
   }
 
   // Find current language label

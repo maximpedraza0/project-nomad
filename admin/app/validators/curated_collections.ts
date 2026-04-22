@@ -17,7 +17,9 @@ export const specResourceValidator = vine.object({
   title: vine.string(),
   description: vine.string(),
   url: vine.string().url().optional(),
-  size_mb: vine.number().min(0),
+  // Optional: resources only available in multiple languages carry sizes per
+  // language in size_mb_by_lang instead of a single size_mb value.
+  size_mb: vine.number().min(0).optional(),
   // Multi-language fields (only present for resources available in multiple languages)
   zim_name: vine.string().optional(),
   zim_flavour: vine.string().optional(),
@@ -89,7 +91,9 @@ export const wikipediaSpecSchema = vine.object({
       id: vine.string(),
       name: vine.string(),
       description: vine.string(),
-      size_mb: vine.number().min(0),
+      // Optional: multi-language options carry size per language in
+      // size_mb_by_lang instead of a single size_mb value.
+      size_mb: vine.number().min(0).optional(),
       url: vine.string().url().nullable().optional(),
       version: vine.string().nullable().optional(),
       zim_name: vine.string().optional(),
@@ -105,7 +109,8 @@ export const wikipediaOptionSchema = vine.object({
   id: vine.string(),
   name: vine.string(),
   description: vine.string(),
-  size_mb: vine.number().min(0),
+  // Optional: multi-language options use size_mb_by_lang instead.
+  size_mb: vine.number().min(0).optional(),
   url: vine.string().url().nullable().optional(),
   zim_name: vine.string().optional(),
   zim_flavour: vine.string().optional(),

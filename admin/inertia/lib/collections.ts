@@ -20,7 +20,11 @@ export function resolveResourceId(resource: SpecResource, language: string): str
   return resource.id
 }
 
-/** Returns the size in MB for a resource in the given language. */
+/**
+ * Returns the size in MB for a resource in the given language.
+ * Falls back to English size when the requested language isn't available,
+ * and to a defensive 0 only if no size information exists at all.
+ */
 export function getResourceSizeForLang(resource: SpecResource, language: string): number {
   if (resource.size_mb_by_lang) {
     const effectiveLang = resource.available_languages?.includes(language) ? language : 'en'
@@ -28,7 +32,7 @@ export function getResourceSizeForLang(resource: SpecResource, language: string)
       return resource.size_mb_by_lang[effectiveLang]
     }
   }
-  return resource.size_mb
+  return resource.size_mb ?? resource.size_mb_by_lang?.['en'] ?? 0
 }
 
 /** Returns whether a resource is available in the given language (or is English-only). */
